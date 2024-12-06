@@ -54,6 +54,8 @@ export const login = async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
+        secure: true,
+        sameSite: "None",
         maxAge: age, // as it expires whenever the session expires so we use it to act as a timer for the cookie to be
         //secure:true    // we cant use it bcoz it is in localhost but use it when in production mode as theree is http then
       })
@@ -65,5 +67,13 @@ export const login = async (req, res) => {
   }
 };
 export const logout = (req, res) => {
-  res.clearCookie("token").status(200).json({ message: "logout successful" }); // removes the token from the backened
+  res
+    .clearCookie("token", token, {
+      httpOnly: true,
+      maxAge: age,
+      secure: true,
+      sameSite: "None",
+    })
+    .status(200)
+    .json({ message: "logout successful" }); // removes the token from the backened
 };
