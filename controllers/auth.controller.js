@@ -70,7 +70,7 @@ export const logout = (req, res) => {
   res
     .clearCookie("token", token, {
       httpOnly: true,
-      maxAge: age,
+      maxAge: 0,
       secure: true,
       sameSite: "None",
     })
