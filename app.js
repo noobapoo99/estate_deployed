@@ -10,9 +10,27 @@ import messageRoute from "./routes/message.route.js";
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+// Sanitize CLIENT_URL to remove trailing slash
+const sanitizedOrigin = process.env.CLIENT_URL?.replace(/\/$/, "");
+
+console.log("CORS allowed origin:", sanitizedOrigin); // Debugging
+
+const corsOptions = {
+  origin: sanitizedOrigin, // Frontend URL
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", // Allowed methods
+  credentials: true, // Allow cookies
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
+
+// Log incoming requests for debugging
+app.use((req, res, next) => {
+  console.log("Request Origin:", req.headers.origin);
+  next();
+});
+
 app.use("/api/posts", postRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/test", testRoute);
